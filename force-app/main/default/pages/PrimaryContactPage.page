@@ -1,0 +1,152 @@
+<apex:page standardController="Account" extensions="PrimaryContactPageHandler">
+
+  <apex:form >
+
+    <apex:outputPanel id="popup">
+      <apex:outputPanel styleClass="popup-container" rendered="{!showPopup}">
+
+        <apex:outputPanel styleClass="popup">
+          <apex:pageBlock title="{!popupTitle}">
+            <p class="popup-message">{!popupMessage}</p>  
+
+            <div align="center" draggable="false" >
+
+              <apex:outputPanel rendered="{!!hasError}">
+                <apex:commandButton action="{!savePopup}" value="Confirm" reRender="contactList,popup"/>
+                <apex:commandButton action="{!cancelPopup}" value="Cancel" reRender="contactList,popup" immediate="true"/>
+              </apex:outputPanel>
+  
+              <apex:outputPanel rendered="{!hasError}">
+                <apex:commandButton action="{!cancelPopup}" value="Okay" reRender="contactList,popup, errpopup" immediate="true"/>
+              </apex:outputPanel>
+
+            </div>
+
+          </apex:pageBlock>
+        </apex:outputPanel>
+
+      </apex:outputPanel>
+    </apex:outputPanel>
+
+    <apex:pageBlock title="Account Primary Contact">
+
+      <apex:pageBlockSection columns="2">
+        <apex:inputField value="{! Account.Name }" />
+        <apex:inputField value="{! Account.AccountNumber }" />
+        <apex:inputField value="{! Account.Type }" />
+        <apex:inputField value="{! Account.Active__c }" />
+        <apex:inputField value="{! Account.Phone }" />
+        <apex:inputField value="{! Account.Fax }" />
+      </apex:pageBlockSection>
+
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!save}" value="Save" />
+        <apex:commandButton action="{!cancel}" value="Cancel" />
+      </apex:pageBlockButtons>
+
+    </apex:pageBlock>
+
+    <apex:pageBlock title="Search related contacts">
+
+      <apex:inputText value="{!contNameInput}" title="Name"/>
+
+      <apex:commandButton value="Search" action="{!handleNameInput}" reRender="contactList">
+        <apex:param value="{!contNameInput}" assignTo="{!contName}"/> 
+      </apex:commandButton>
+
+    </apex:pageBlock>
+
+    <apex:outputPanel id="contactList">
+
+      <apex:pageBlock title="Related Contacts">
+
+        <apex:pageBlockTable value="{!contactsList}" var="contact">
+
+          <apex:column headerValue="Name">
+            <apex:outputField value="{!contact.Name}"/>
+          </apex:column>
+
+          <apex:column headerValue="Title">
+            <apex:outputField value="{!contact.Title}"/>
+          </apex:column>
+
+          <apex:column headerValue="Phone">
+            <apex:outputField value="{!contact.Phone}"/>
+          </apex:column>
+
+          <apex:column headerValue="Is Primary Contact">
+            <apex:outputField value="{!contact.Primary_Contact__c}"/>
+          </apex:column>
+
+          <apex:column>
+
+            <apex:outputPanel id="icon">
+              <apex:outputPanel rendered="{!contact.Primary_Contact__c}">
+                <p>✅</p>
+              </apex:outputPanel>
+            </apex:outputPanel>
+
+            <apex:commandLink rendered="{!!contact.Primary_Contact__c}" 
+                              value="Set Primary Contact" 
+                              action="{!showPopUp}" 
+                              reRender="popup">
+              <apex:param name="newPrimaryContId" value="{!contact.Id}" assignTo="{!newPrimaryContId}"/>
+            </apex:commandLink>
+
+          </apex:column>
+        </apex:pageBlockTable>
+      
+        <table style="width: 100%">
+          <tr>
+            <td>
+              <apex:outputText>
+                {!pageInt} of {!CEILING(contactCount / limitInt)}
+              </apex:outputText>
+            </td>
+
+            <td align="center">
+              <apex:commandButton reRender="contactList, icon" value="First" action="{!firstPage}" disabled="{!prevDisabled}" title="First Page"/> 
+              <apex:commandButton reRender="contactList, icon" value="Previous" action="{!prevPage}" disabled="{!prevDisabled}" title="Previous Page"/> 
+              <apex:commandButton reRender="contactList, icon" value="Next" action="{!nextPage}" disabled="{!nextDisabled}" title="Next Page"/> 
+              <apex:commandButton reRender="contactList, icon" value="Last" action="{!lastPage}" disabled="{!nextDisabled}" title="Last Page"/> 
+            </td>
+
+            <td align="right">
+              <apex:selectList value="{!limitInt}" multiselect="false" size="1" >
+                <apex:selectOptions value="{!paginationSizeOptions}"/>
+                <apex:actionSupport event="onchange" reRender="contactList, icon" />
+              </apex:selectList>
+            </td>
+          </tr>
+        </table>
+      </apex:pageBlock>
+    </apex:outputPanel>
+  </apex:form>
+
+  <style type='text/css'>
+    .popup-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, .75);
+      z-index: 9999;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      height: 50%;
+    }
+      
+    .popup-message {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    </style>
+</apex:page>
