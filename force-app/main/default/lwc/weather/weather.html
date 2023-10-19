@@ -1,0 +1,22 @@
+<template>
+    <lightning-card title={title}>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="Small"></lightning-spinner>
+        </template>
+        <div class="container">
+            <template if:true={hasError}>
+                <p>{errorMessage}</p>
+            </template>
+            <template if:false={hasError}>
+                <div>
+                    <p><b>Temperature:</b> {temperature}</p>
+                    <p><b>Description:</b> {description}</p>
+                </div>
+                <img
+                    src={iconUrl}
+                    alt="Weather icon."
+                />
+            </template>
+        </div>
+    </lightning-card>
+</template>
