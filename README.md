@@ -5,7 +5,6 @@
 ![1- Apex Triggers][triggers]
 
 ## 2- Batch and Scheduled Jobs
-
 ![2- Batch and Scheduled Jobs](https://i.hizliresim.com/ow8hwum.png "2- Batch and Scheduled Jobs")
 
 ## 3- REST API
