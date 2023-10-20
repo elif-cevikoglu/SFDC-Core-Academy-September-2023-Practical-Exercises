@@ -57,7 +57,7 @@ public class ContactTriggerHelper {
     }
 
     /*******************************************************************************************************
-    * @description gets AccountIds Wit hExisting Primary Contact.
+    * @description gets AccountIds With Existing Primary Contact.
     * @param List<Contact> contList
     * @return Set<Id>
     */
@@ -96,8 +96,8 @@ public class ContactTriggerHelper {
     }
 
     /*******************************************************************************************************
-    * @description gets Cont Map To Update Primary Contact Phone from.
-    * @param List<Contact> contListToBeUpdated-
+    * @description gets Cont Map To Update Primary Contact Phone.
+    * @param List<Contact> contListToBeUpdated
     * @return Map<Id, Contact>
     */
     public Map<Id, Contact> getContMapToUpdate(List<Contact> contListToBeUpdated) {
