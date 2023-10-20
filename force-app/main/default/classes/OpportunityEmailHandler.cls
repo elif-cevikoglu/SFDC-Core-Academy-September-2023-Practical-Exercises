@@ -5,11 +5,6 @@
 */
 
 public class OpportunityEmailHandler implements Database.Batchable<sObject> {
-    /*******************************************************************************************************
-    * @description Gets all accounts with their suitable contacts and opportunities.
-    * @param Database.BatchableContext bc
-    * @return Database.getQueryLocator
-    */
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator('SELECT Id, Name, ' +
                                         '(SELECT Id, Email, AccountId FROM Contacts ' +
@@ -19,23 +14,15 @@ public class OpportunityEmailHandler implements Database.Batchable<sObject> {
                                         'FROM Account');
     }
 
-    /*******************************************************************************************************
-    * @description Summarizes opportunities and sends emails to their primary contacts.
-    * @param Database.BatchableContext bc
-    * @param List<Account> scope
-    * @return void
-    */
     public void execute(Database.BatchableContext bc, List<Account> scope) {
         Map<Id, Map<String, Integer>> summaryMap = new Map<Id, Map<String, Integer>>();
         List<Messaging.SingleEmailMessage> mailsList = new List<Messaging.SingleEmailMessage>();
     
-        // Loop over accounts
         for (Account acct : scope) {
             summaryMap.put(acct.Id, new Map<String, Integer>{'Closed Won' => 0, 
                                                             'Closed Lost' => 0, 
                                                             'Open' => 0});
 
-            // Calculate summaries
             for (Opportunity oppt : acct.Opportunities) {
                 String stageName = oppt.StageName;
                 Integer amount = Integer.valueOf(oppt.Amount);
@@ -47,7 +34,6 @@ public class OpportunityEmailHandler implements Database.Batchable<sObject> {
                 }
             }
 
-            // Create emails
             for (Contact cont : acct.Contacts) {
                 Messaging.SingleEmailMessage emailObj = new Messaging.SingleEmailMessage();
                 Map<String, Integer> accountResults = summaryMap.get(cont.AccountId);
@@ -69,7 +55,6 @@ public class OpportunityEmailHandler implements Database.Batchable<sObject> {
             }
         }
     
-        // Send emails
         if (!mailsList.isEmpty()) {
             Messaging.sendEmail(mailsList);
         }
