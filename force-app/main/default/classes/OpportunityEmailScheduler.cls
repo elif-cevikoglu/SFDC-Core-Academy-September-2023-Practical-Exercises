@@ -12,11 +12,6 @@ public class OpportunityEmailScheduler implements Schedulable {
         'default' => new Map<String, String>{'NAME' => 'Schedule Opportunity Monthly (Default)', 'CRON' => '0 0 18 ? * FRIL *'}
     };
 
-    /*******************************************************************************************************
-    * @description Gets all accounts with their suitable contacts and opportunities.
-    * @param Database.BatchableContext bc
-    * @return Database.getQueryLocator
-    */
     public static String scheduleOpportunityEmail(String onceA) {
         if (CONFIG.keySet().contains(onceA)) {
             return System.schedule(CONFIG.get(onceA).get('NAME'), CONFIG.get(onceA).get('CRON'), new OpportunityEmailScheduler());
