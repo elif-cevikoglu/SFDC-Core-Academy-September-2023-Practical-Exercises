@@ -8,7 +8,6 @@ private class OpportunityEmailHandlerTest {
 
     @IsTest
     private static void testOpportunityEmailHandler() {
-        // Data
         Account testAccount = new Account(Name = 'Test Account');
         insert testAccount;
         
@@ -20,7 +19,6 @@ private class OpportunityEmailHandlerTest {
         Opportunity testOpportunity = new Opportunity(Name = 'Test Opportunity', StageName = 'Closed Won', CloseDate = Date.today(), Amount = 1000, AccountId = testAccount.Id);
         insert testOpportunity;
         
-        // Start
         Test.startTest();
         OpportunityEmailHandler batch = new OpportunityEmailHandler();
         Database.executeBatch(batch);
